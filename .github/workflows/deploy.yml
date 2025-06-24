@@ -41,27 +41,15 @@ jobs:
           echo "LW_API_KEY=${{ secrets.LW_API_KEY }}" >> env.list
           echo "LW_API_SECRET=${{ secrets.LW_API_SECRET }}" >> env.list
 
-      - name: Run Lacework IaC Scan and fail on Critical findings
-        id: scan
+      - name: Run Lacework IaC Scan (debug mode)
         run: |
-            set -o pipefail
-            OUTPUT=$(docker run --rm \
-              --env-file env.list \
-              -v "$PWD:/workdir" \
-              -w /workdir \
-              lacework/codesec-iac \
-              lacework iac scan --directory /workdir 2>&1)
-
-            echo "=== BEGIN SCAN OUTPUT ==="
-            echo "$OUTPUT"
-            echo "=== END SCAN OUTPUT ==="
-
-           # if echo "$OUTPUT" | grep -i "Critical" | grep -i "false"; then
-           #   echo "🚨 Found Critical IaC findings with PASS = false. Failing the job."
-            #  exit 1
-            #else
-             # echo "✅ No critical failing findings detected."
-            #fi 
+          set -o pipefail
+          docker run --rm \
+            --env-file env.list \
+            -v "$PWD:/workdir" \
+            -w /workdir \
+            lacework/codesec-iac \
+            lacework iac scan --directory /workdir
 
       - name: Upload Scan Reports (if any)
         uses: actions/upload-artifact@v4
