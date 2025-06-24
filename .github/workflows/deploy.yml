@@ -57,7 +57,7 @@ jobs:
             echo "=== END SCAN OUTPUT ==="
 
             if echo "$OUTPUT" | grep -i "Critical" | grep -i "false"; then
-              echo "🚨 Found Critical IaC findings with PASS = false. Failing the job."
+              echo "🚨 Foundd Critical IaC findings with PASS = false. Failing the job."
               exit 1
             else
               echo "✅ No critical failing findings detected."
